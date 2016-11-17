@@ -60,6 +60,7 @@
 - (JHChainableFloat) transformScale; // x and y equal
 - (JHChainableFloat) transformScaleX;
 - (JHChainableFloat) transformScaleY;
+- (JHChainableTransform3D) transform3D;
 
 // AutoLayout
 // Affects constants of constraints

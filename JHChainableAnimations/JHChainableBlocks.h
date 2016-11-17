@@ -55,5 +55,8 @@ typedef UIView* (^JHChainableAnimation)(NSTimeInterval duration);
 typedef UIView* (^JHChainableAnimationWithCompletion)(NSTimeInterval duration, JHAnimationCompletion completion);
 #define JHChainableAnimationWithCompletion(duration,completion) ^UIView* (NSTimeInterval duration, JHAnimationCompletion completion)
 
+typedef UIView* (^JHChainableTransform3D)(CATransform3D transform);
+#define JHChainableTransform3D(transform) ^UIView* (CATransform3D transform)
+
 
 #endif

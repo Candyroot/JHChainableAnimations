@@ -880,6 +880,22 @@ typedef void (^JHAnimationCompletionAction)(UIView *weakSelf);
     return chainable;
 }
 
+- (JHChainableTransform3D) transform3D {
+    JHChainableTransform3D chainable = JHChainableTransform3D(t) {
+        [self addAnimationCalculationAction:^(UIView *weakSelf) {
+            JHKeyframeAnimation *transformAnimation = [weakSelf basicAnimationForKeyPath:@"transform"];
+            transformAnimation.fromValue = [NSValue valueWithCATransform3D:weakSelf.layer.transform];
+            transformAnimation.toValue = [NSValue valueWithCATransform3D:t];
+            [weakSelf addAnimationFromCalculationBlock:transformAnimation];
+        }];
+        [self addAnimationCompletionAction:^(UIView *weakSelf) {
+            weakSelf.layer.transform = t;
+        }];
+        return self;
+    };
+    return chainable;
+}
+
 // AutoLayout
 - (JHChainableLayoutConstraint) makeConstraint {
     JHChainableLayoutConstraint chainable = JHChainableLayoutConstraint(constraint, f) {
