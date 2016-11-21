@@ -658,9 +658,8 @@ typedef void (^JHAnimationCompletionAction)(UIView *weakSelf);
         }];
         [self addAnimationCompletionAction:^(UIView *weakSelf) {
             CATransform3D transform = weakSelf.layer.transform;
-            CGFloat originalRotation = atan2(transform.m23, transform.m22);
-            CATransform3D xRotation = CATransform3DMakeRotation(degreesToRadians(angle)+originalRotation, 1.0, 0, 0);
-            weakSelf.layer.transform = xRotation;
+            transform = CATransform3DRotate(transform, degreesToRadians(angle), 1.0, 0, 0);
+            weakSelf.layer.transform = transform;
         }];
         
         return self;
@@ -681,9 +680,8 @@ typedef void (^JHAnimationCompletionAction)(UIView *weakSelf);
         }];
         [self addAnimationCompletionAction:^(UIView *weakSelf) {
             CATransform3D transform = weakSelf.layer.transform;
-            CGFloat originalRotation = atan2(transform.m31, transform.m33);
-            CATransform3D yRotation = CATransform3DMakeRotation(degreesToRadians(angle)+originalRotation, 0, 1.0, 0);
-            weakSelf.layer.transform = yRotation;
+            transform = CATransform3DRotate(transform, degreesToRadians(angle), 0, 1.0, 0);
+            weakSelf.layer.transform = transform;
         }];
         
         return self;
@@ -704,9 +702,8 @@ typedef void (^JHAnimationCompletionAction)(UIView *weakSelf);
         }];
         [self addAnimationCompletionAction:^(UIView *weakSelf) {
             CATransform3D transform = weakSelf.layer.transform;
-            CGFloat originalRotation = atan2(transform.m12, transform.m11);
-            CATransform3D zRotation = CATransform3DMakeRotation(degreesToRadians(angle)+originalRotation, 0, 0, 1.0);
-            weakSelf.layer.transform = zRotation;
+            transform = CATransform3DRotate(transform, degreesToRadians(angle), 0, 0, 1.0);
+            weakSelf.layer.transform = transform;
         }];
         
         return self;
