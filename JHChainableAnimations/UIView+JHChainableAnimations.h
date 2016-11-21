@@ -116,6 +116,7 @@
 - (UIView *) easeInOut;
 - (UIView *) easeBack;
 - (UIView *) spring;
+- (JHChainableSpringAnimation) springAnimation;
 - (UIView *) bounce;
 
 // Animation Keyframe Calculation Functions
@@ -151,5 +152,8 @@
 - (UIView *) easeInBounce;
 - (UIView *) easeOutBounce;
 - (UIView *) easeInOutBounce;
+
+#pragma mark - Spring Animation Duration
+- (NSTimeInterval)durationForSpringAnimationWithEpsilon:(CGFloat)epsilon damping:(CGFloat)damping mass:(CGFloat)mass;
 
 @end

@@ -58,5 +58,8 @@ typedef UIView* (^JHChainableAnimationWithCompletion)(NSTimeInterval duration, J
 typedef UIView* (^JHChainableTransform3D)(CATransform3D transform);
 #define JHChainableTransform3D(transform) ^UIView* (CATransform3D transform)
 
+typedef UIView* (^JHChainableSpringAnimation)(CGFloat damping, CGFloat mass, CGFloat stiffness, CGFloat velocity, BOOL allowsOverdamping);
+#define JHChainableSpringAnimation(damping, mass, stiffness, velocity, allowsOverdamping) ^UIView* (CGFloat damping, CGFloat mass, CGFloat stiffness, CGFloat velocity, BOOL allowsOverdamping)
+
 
 #endif

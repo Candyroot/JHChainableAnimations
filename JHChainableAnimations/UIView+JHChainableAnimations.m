@@ -1103,6 +1103,50 @@ typedef void (^JHAnimationCompletionAction)(UIView *weakSelf);
     return self.easeOutElastic;
 }
 
+- (JHChainableSpringAnimation) springAnimation {
+    return ^(CGFloat b, CGFloat m, CGFloat k, CGFloat v0, BOOL allowsOverdamping) {
+        NSParameterAssert(m > 0);
+        NSParameterAssert(k > 0);
+        NSParameterAssert(b > 0);
+        
+        CGFloat beta = b / (2 * m);
+        CGFloat omega0 = sqrtf(k / m);
+        CGFloat omega1 = sqrtf((omega0 * omega0) - (beta * beta));
+        CGFloat omega2 = sqrtf((beta * beta) - (omega0 * omega0));
+        
+        CGFloat x0 = -1;
+        if (!allowsOverdamping && beta > omega0) beta = omega0;
+        
+        CGFloat (^oscillation)(CGFloat);
+        if (beta < omega0) {
+            // Underdamped
+            oscillation = ^(CGFloat t) {
+                CGFloat envelope = expf(-beta * t);
+                
+                return -x0 + envelope * (x0 * cosf(omega1 * t) + ((beta * x0 + v0) / omega1) * sinf(omega1 * t));
+            };
+        } else if (beta == omega0) {
+            // Critically damped
+            oscillation = ^(CGFloat t) {
+                CGFloat envelope = expf(-beta * t);
+                
+                return -x0 + envelope * (x0 + (beta * x0 + v0) * t);
+            };
+        } else {
+            // Overdamped
+            oscillation = ^(CGFloat t) {
+                CGFloat envelope = expf(-beta * t);
+                
+                return -x0 + envelope * (x0 * coshf(omega2 * t) + ((beta * x0 + v0) / omega2) * sinhf(omega2 * t));
+            };
+        }
+        [self addAnimationKeyframeCalculation:^double(double t, double b, double c, double d) {
+            return oscillation(t / 1000.0);
+        }];
+        return self;
+    };
+}
+
 - (UIView *) bounce {
     return self.easeOutBounce;
 }
@@ -1441,6 +1485,17 @@ typedef void (^JHAnimationCompletionAction)(UIView *weakSelf);
     NSAssert(self.JHAnimations.count == self.JHAnimationGroups.count, @"FATAL ERROR: ANIMATION GROUPS AND ANIMATIONS ARE OUT OF SYNC");
     NSAssert(self.JHAnimationCalculationActions.count == self.JHAnimationCompletionActions.count, @"FATAL ERROR: ANIMATION CALCULATION OBJECTS AND ANIMATION COMPLETION OBJECTS ARE OUT OF SYNC");
     NSAssert(self.JHAnimations.count == self.JHAnimationCompletionActions.count, @"FATAL ERROR: ANIMATIONS AND ANIMATION COMPLETION OBJECTS  ARE OUT OF SYNC");
+}
+
+- (NSTimeInterval)durationForSpringAnimationWithEpsilon:(CGFloat)epsilon damping:(CGFloat)damping mass:(CGFloat)mass {
+    CGFloat beta = damping / (2 * mass);
+    
+    CFTimeInterval duration = 0;
+    while (expf(-beta * duration) >= epsilon) {
+        duration += 0.1;
+    }
+    
+    return duration;
 }
 
 @end
